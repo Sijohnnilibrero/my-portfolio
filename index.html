@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Portfolio</title>
+  <meta name="description" content="Responsive portfolio with introduction, projects, pictures, and a Download Resume button. HTML & CSS only." />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #11161d;
+      --muted: #c9d1d9;
+      --text: #e6edf3;
+      --accent: #7cdbf0;
+      --accent-strong: #67c7dd;
+      --border: #1f2630;
+      --shadow: 0 10px 25px rgba(0,0,0,.25);
+      --radius: 18px;
+      --gap: clamp(12px, 2vw, 24px);
+      --container: min(1100px, 92vw);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7f9fb;
+        --card: #ffffff;
+        --muted: #4b5563;
+        --text: #0b1220;
+        --accent: #0ea5e9;
+        --accent-strong: #0284c7;
+        --border: #e5e7eb;
+        --shadow: 0 10px 25px rgba(2, 6, 23, .06);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { 
+      margin: 0; 
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 100% -20%, rgba(124,219,240,.07), transparent 60%),
+                  radial-gradient(800px 600px at -10% 10%, rgba(124,219,240,.06), transparent 60%),
+                  var(--bg);
+      line-height: 1.6;
+    }
+
+    .container { width: var(--container); margin-inline: auto; padding: 28px 0; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: var(--gap); padding: 12px 0; }
+    .brand { display: flex; gap: 12px; align-items: center; font-weight: 800; letter-spacing: .3px; }
+    .brand .logo { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), var(--accent-strong)); color: #001018; font-weight: 900; box-shadow: var(--shadow); }
+    nav ul { list-style: none; display: flex; gap: 12px; padding: 0; margin: 0; flex-wrap: wrap; }
+    nav a { text-decoration: none; color: var(--text); padding: 8px 12px; border-radius: 999px; border: 1px solid transparent; }
+    nav a:hover { border-color: var(--border); background: color-mix(in srgb, var(--card) 85%, transparent); }
+
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--border); background: linear-gradient(180deg, color-mix(in srgb, var(--card) 70%, transparent), var(--card)); text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: transform .12s ease; font-weight: 600; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 20%, var(--card)), var(--card)); }
+
+    /* Hero */
+    .hero { padding: 48px 0 24px; display: grid; grid-template-columns: 1.2fr .8fr; gap: var(--gap); align-items: center; }
+    .hero .tag { display: inline-block; font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); border: 1px solid var(--border); padding: 6px 10px; border-radius: 999px; }
+    .hero h1 { font-size: clamp(28px, 6vw, 44px); margin: 12px 0 8px; line-height: 1.15; }
+    .hero p { color: var(--muted); margin: 0 0 18px; font-size: clamp(14px, 2.4vw, 18px); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .portrait { aspect-ratio: 1 / 1; border-radius: var(--radius); overflow: hidden; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(1.05) contrast(1.02); }
+
+    /* Sections */
+    section { padding: 24px 0; }
+    .section-title { font-size: clamp(20px, 3vw, 28px); margin: 0 0 6px; }
+    .section-sub { color: var(--muted); margin: 0 0 16px; }
+
+    /* Projects grid */
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); }
+    .project-card { grid-column: span 12; border: 1px solid var(--border); background: var(--card); border-radius: var(--radius); overflow: clip; box-shadow: var(--shadow); display: grid; }
+    .project-media { aspect-ratio: 16 / 9; overflow: hidden; }
+    .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .project-body { padding: 16px; display: grid; gap: 8px; }
+    .project-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { font-size: 12px; border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 999px; }
+
+    /* Gallery */
+    .gallery { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); }
+    .gallery figure { margin: 0; grid-column: span 6; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); }
+    .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery figcaption { padding: 10px 12px; font-size: 13px; color: var(--muted); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); margin-top: 36px; }
+    .foot { display: grid; gap: 8px; padding: 18px 0 36px; color: var(--muted); }
+
+    /* Responsive tweaks */
+    @media (min-width: 720px) {
+      .project-card { grid-column: span 6; }
+    }
+    @media (min-width: 1024px) {
+      .project-card { grid-column: span 4; }
+    }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; }
+      .portrait { order: -1; max-width: 360px; justify-self: center; }
+    }
+
+    /* Utility */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand" aria-label="Brand">
+        <div class="logo" aria-hidden="true">P</div>
+        <span>Portfolio</span>
+      </div>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#gallery">Pictures</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="btn primary" href="resume.pdf" download>
+        <!-- Replace resume.pdf with your actual file -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Download Resume</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="container hero" id="about">
+      <div>
+        <span class="tag">Hello, I'm</span>
+        <h1>John Librero — An ICT student</h1>
+        <p>
+          I am John E. Librero, i am 20 years old, i currently reside at barangay san antonio basco batanes, I am a student at Batanes State College and I am from the Department of Information and Communication Technology.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#projects">See Projects</a>
+          <a class="btn" href="#contact">Get in Touch</a>
+        </div>
+      </div>
+      <div class="portrait" aria-label="Portrait">
+        <img src="image/yaken.jpg" alt="Portrait placeholder" />
+      </div>
+    </section>
+
+    <section class="container" id="projects">
+      <h2 class="section-title">Projects</h2>
+      <p class="section-sub">Photoshop</p>
+
+      <div class="grid">
+        <!-- Project 1 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="image/Activity%203.1_Librero.png" alt="Project cover placeholder" />
+          </div>
+          
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="image/Bubuka%20ang%20bolaklak%20sa%20fes%20ng%20lalaki.png" alt="Project cover placeholder" />
+          </div>
+          
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="image/Activity_4%20po.png" alt="Project cover placeholder" />
+          </div>
+          
+        </article>
+
+        <!-- Project 4 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="image/Activity_4_Cloning.png" alt="Project cover placeholder" />
+          </div>
+          
+        </article>
+      </div>
+    </section>
+
+    <section class="container" id="gallery">
+      <h2 class="section-title">Pictures</h2>
+      <p class="section-sub">Phone camera</p>
+
+      <div class="gallery">
+        <figure>
+          <img src="image/590b9103-b6b7-43d1-ba31-88d39c2f461c.jpg" alt="Work snapshot 1" />
+          <figcaption>Workspace & tools</figcaption>
+        </figure>
+        <figure>
+          <img src="image/b1f40c5b-9120-40ed-9913-599c44a3b8f8.jpg" alt="Work snapshot 2" />
+          <figcaption>Design sketches</figcaption>
+        </figure>
+        <figure>
+          <img src="image/ad7b9698-d86b-437a-b81d-09913b7d437e.jpg" alt="Work snapshot 3" />
+          <figcaption>Prototype preview</figcaption>
+        </figure>
+        <figure>
+          <img src="image/f5e5f2d3-056d-44ac-a03a-df2aa41dbb6f.jpg" alt="Work snapshot 4" />
+          <figcaption>Final UI screens</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="container" id="contact">
+      <h2 class="section-title">Contact</h2>
+      <p class="section-sub">Email me at <a href="mailto:librerojohn0@gmail.com">librerojohn0@gmail.com</a> or reach me on your socials.</p>
+    
+               
+                    <p><i class="fa fa-envelope w3-xxlarge w3-text-light-grey"></i></p>
+                    <a href="mailto:jhanlibrero">jhanlibrero@gmail.com</a>
+                
+                
+                    <p><i class="fa fa-instagram w3-xxlarge w3-text-light-grey"></i></p>
+                    <a href="https://www.instagram.com/2dyas_jhan?utm_source=qr&igsh=MWkwN2g1MWs3MGpzaw==">2dyas_jhan</a>
+                
+                
+                    <p><i class="fa fa-facebook w3-xxlarge w3-text-light-grey"></i></p>
+                    <a href="https://www.facebook.com/share/15tNiaxmDa/">Jhan Librero</a>
+                
+        
+                    
+      <div class="hero-actions">
+        <a class="btn" href="#about">Back to top</a>
+        <a class="btn primary" href="resume.pdf" download>Download Resume</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <small>© <span id="y">2025</span> librerojohn. All rights reserved.</small>
+    </div>
+  </footer>
+
+  
+</body>
+</html>
